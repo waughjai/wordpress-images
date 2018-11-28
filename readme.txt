@@ -50,7 +50,21 @@ To make working with theme image objects with minimal inconvenience for images t
 == Examples ==
 
 use WaughJ\WPImage\WPUploadImage;
-echo new WPUploadImage( 'demo.png', [ 'directory' => '2018/12', 'class' => 'center-img portrait', 'width' => 800, 'height' => 600, 'alt' => 'King' ] );
+echo new WPUploadImage
+(
+	'demo.png',
+	[
+		'directory' => '2018/12',
+		'class' => 'center-img portrait',
+		'width' => 800,
+		'height' => 600,
+		'alt' => 'King'
+	]
+);
+
+&
+
+[upload-image src="demo.png" directory="2018/12" class="center-img portrait" width="800" height="600" alt="King"]
 
 Will generate `<img class="center-img portrait" width="800" height="600" alt="King" src="https://www.domain.com/wp-content/uploads/2018/12/demo.png?m=#######" />`
 
