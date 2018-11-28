@@ -1,0 +1,27 @@
+{
+    "name": "waughj/waj-images",
+    "description": "Simple classes & shortcodes for easy image HTML generation from common image directories.",
+    "keywords": [ "wordpress", "plugin", "shorcodes", "image", "loader", "html generator" ],
+    "license": "GPL-2.0-or-later",
+    "authors": [
+        {
+            "name": "Jaimeson Waugh",
+            "email": "waughjai@gmail.com"
+        }
+    ],
+    "type": "library",
+    "require": {
+		"php": ">=7.0",
+        "waughj/file-loader": "^0.2.0",
+        "waughj/html-image": "^0.2.0",
+		"waughj/test-hash-item": "*"
+    },
+    "require-dev": {
+		"phpunit/phpunit": "6.*"
+    },
+    "autoload": {
+        "psr-4": {
+            "WaughJ\\WPImage\\": "src/"
+        }
+    }
+}
