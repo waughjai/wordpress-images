@@ -19,7 +19,7 @@ namespace WaughJ\WPImage
 
 		final public function __toString()
 		{
-			return $this->getHTML();
+			return $this->getHTMLString();
 		}
 
 		final public function print() : void
