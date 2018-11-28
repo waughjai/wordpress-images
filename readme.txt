@@ -1,4 +1,4 @@
-# WAJ Image
+=== WAJ Image ===
 Contributors: waughjai
 Tags: image, loader, html generator
 Requires at least: 4.9.8
@@ -11,7 +11,7 @@ License URI: https://www.gnu.org/licenses/gpl-2.0.html
 Simple classes & shortcodes for easy image HTML generation from common image directories.
 
 
-## Description
+== Description ==
 
 This plugin has 3 main classes, with a shortcode for each 1.
 
@@ -40,28 +40,28 @@ If "alt" attribute is not set, an empty 1 will automatically be added to the HTM
 To make working with theme image objects with minimal inconvenience for images that are all in the same directory that is not the topmost directory o' the theme directory, you can globally set the inner shared directory using WPThemeImage's static setDefaultSharedDirectory method on the class itself. After that, all initialized WPThemeImage instances, including the shortcode, will automatically use that shared directory if a different 1 isn't provided.
 
 
-## Installation
+== Installation ==
 
 1. Upload the plugin files to the `/wp-content/plugins/plugin-name` directory, or install the plugin through the WordPress plugins screen directly.
 2. Activate the plugin through the 'Plugins' screen in WordPress
 3. Images can be added using shortcode in WordPress editors or directly in PHP by using instances o' classes. Instances o' classes can be automatically casted into strings & used as strings.
 
 
-## Examples
+== Examples ==
 
-	use WaughJ\WPImage\WPUploadImage;
-	echo new WPUploadImage( 'demo.png', [ 'directory' => '2018/12', 'class' => 'center-img portrait', 'width' => 800, 'height' => 600, 'alt' => 'King' ] );
+use WaughJ\WPImage\WPUploadImage;
+echo new WPUploadImage( 'demo.png', [ 'directory' => '2018/12', 'class' => 'center-img portrait', 'width' => 800, 'height' => 600, 'alt' => 'King' ] );
 
 Will generate `<img class="center-img portrait" width="800" height="600" alt="King" src="https://www.domain.com/wp-content/uploads/2018/12/demo.png?m=#######" />`
 
-	use WaughJ\WPImage\WWPThemeImage;
-	WPThemeImage::setDefaultSharedDirectory( 'img' );
-	echo new WPThemeImage( 'photo.jpg' );
+use WaughJ\WPImage\WWPThemeImage;
+WPThemeImage::setDefaultSharedDirectory( 'img' );
+echo new WPThemeImage( 'photo.jpg' );
 
 Will generate `<img src="https://www.domain.com/wp-content/themes/theme-slug/img/photo.jpg?m=#########" alt="" />`
 
 
-## Changelog
+== Changelog ==
 
-### 1.0
+= 1.0 =
 * Initial stable version.

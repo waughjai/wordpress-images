@@ -6,7 +6,7 @@ namespace WaughJ\WPImage
 	use WaughJ\HTMLImage\HTMLImage;
 	use WaughJ\FileLoader\FileLoader;
 
-	class WPUploadsImage extends WPImage
+	class WPUploadImage extends WPImage
 	{
 		public function __construct( string $src, array $attributes = [] )
 		{

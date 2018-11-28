@@ -1,6 +1,6 @@
 <?php
 	/*
-	Plugin Name:  WAJ Image Loaders
+	Plugin Name:  WAJ Image
 	Plugin URI:   https://github.com/waughjai/waj-image-loaders
 	Description:  Classes & shortcodes for making image HTML generation simpler for WordPress.
 	Version:      1.0.0
@@ -15,6 +15,7 @@
 
 	use WaughJ\WPImage\WPThemeImage;
 	use WaughJ\WPImage\WPUploadsImage;
+	use WaughJ\HTMLImage\HTMLImage;
 	use function WaughJ\TestHashItem\TestHashItemString;
 
 	add_shortcode
@@ -26,8 +27,9 @@
 			if ( $src )
 			{
 				unset( $atts[ 'src' ] );
-				return new WPThemeImage( $atts );
+				return new WPThemeImage( $src, $atts );
 			}
+			return '';
 		}
 	);
 
@@ -40,7 +42,23 @@
 			if ( $src )
 			{
 				unset( $atts[ 'src' ] );
-				return new WPUploadsImage( $atts );
+				return new WPUploadsImage( $src, $atts );
 			}
+			return '';
+		}
+	);
+
+	add_shortcode
+	(
+		'image',
+		function( $atts )
+		{
+			$src = TestHashItemString( $atts, 'src' );
+			if ( $src )
+			{
+				unset( $atts[ 'src' ] );
+				return new HTMLImage( $src, $atts );
+			}
+			return '';
 		}
 	);
