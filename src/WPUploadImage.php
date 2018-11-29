@@ -15,7 +15,7 @@ namespace WaughJ\WPImage
 			parent::__construct( $src, $loader, $attributes );
 		}
 
-		private static function getFileLoader( array $attributes ) : FileLoader
+		public static function getFileLoader( array $attributes ) : FileLoader
 		{
 			$uploads = wp_upload_dir();
 			$loader = new FileLoader([ 'directory-url' => $uploads[ 'url' ], 'directory-server' => $uploads[ 'path' ] ]);

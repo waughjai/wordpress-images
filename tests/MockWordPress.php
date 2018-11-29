@@ -18,3 +18,18 @@
 			'url' => 'https://www.example.com/wp-content/uploads'
 		];
 	}
+
+	function add_shortcode( $name, $action )
+	{
+		global $shortcodes;
+		$shortcodes[ $name ] = $action;
+	}
+
+	function do_shortcode( $type, $atts )
+	{
+		global $shortcodes;
+		return $shortcodes[ $type ]( $atts );
+	}
+
+	global $shortcodes;
+	$shortcodes = [];

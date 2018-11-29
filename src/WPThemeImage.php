@@ -21,7 +21,7 @@ namespace WaughJ\WPImage
 			self::$default_shared_directory = new Directory( $directory );
 		}
 
-		private static function getFileLoader( array $attributes ) : FileLoader
+		public static function getFileLoader( array $attributes ) : FileLoader
 		{
 			if ( !isset( $attributes[ 'directory' ] ) || !$attributes[ 'directory' ] )
 			{
