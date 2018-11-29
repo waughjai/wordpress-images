@@ -6,12 +6,24 @@ namespace WaughJ\WPImage
 	use WaughJ\HTMLImage\HTMLImage;
 	use WaughJ\FileLoader\FileLoader;
 
-	class WPUploadImage extends WPImage
+	class WPUploadImage extends HTMLImage
 	{
 		public function __construct( string $src, array $attributes = [] )
 		{
+			$loader = self::getFileLoader( $attributes );
+			unset( $attributes[ 'directory' ] ); // Make sure we don't keep this is an attribute that gets passed into the HTML itself.
+			parent::__construct( $src, $loader, $attributes );
+		}
+
+		private static function getFileLoader( array $attributes ) : FileLoader
+		{
 			$uploads = wp_upload_dir();
-			parent::__construct( $src, $attributes, new FileLoader([ 'directory-url' => $uploads[ 'url' ], 'directory-server' => $uploads[ 'path' ] ]) );
+			$loader = new FileLoader([ 'directory-url' => $uploads[ 'url' ], 'directory-server' => $uploads[ 'path' ] ]);
+			if ( isset( $attributes[ 'directory' ] ) && $attributes[ 'directory' ] )
+			{
+				$loader = $loader->changeSharedDirectory( $attributes[ 'directory' ] );
+			}
+			return $loader;
 		}
 	}
 }

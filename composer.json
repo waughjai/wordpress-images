@@ -12,8 +12,8 @@
     "type": "library",
     "require": {
 		"php": ">=7.0",
-        "waughj/file-loader": "^0.2.0",
-        "waughj/html-image": "^0.2.0",
+        "waughj/file-loader": ">=0.2.0",
+        "waughj/html-image": ">=0.3.0",
 		"waughj/test-hash-item": "*"
     },
     "require-dev": {
