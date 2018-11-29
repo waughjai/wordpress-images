@@ -15,6 +15,10 @@ namespace WaughJ\WPImage
 			$this->show_version = ( !isset( $attributes[ 'show-version' ] ) || $attributes[ 'show-version' ] );
 			$this->attributes = $attributes;
 			unset( $this->attributes[ 'show-version' ], $this->attributes[ 'directory' ] );
+			if ( isset( $this->attributes[ 'srcset' ] ) && is_string( $this->attributes[ 'srcset' ] ) )
+			{
+				$this->attributes[ 'srcset' ] = $this->adjustSrcSet( $this->attributes[ 'srcset' ] );
+			}
 		}
 
 		final public function __toString()
@@ -29,14 +33,34 @@ namespace WaughJ\WPImage
 
 		public function getHTML() : HTMLImage
 		{
-			return ( $this->show_version )
-				? new HTMLImage( $this->loader->getSourceWithVersion( $this->src ), $this->attributes )
-				: new HTMLImage( $this->loader->getSource( $this->src ), $this->attributes );
+			return new HTMLImage( $this->getASource( $this->src ), $this->attributes );
 		}
 
 		public function getHTMLString() : string
 		{
 			return ( string )( $this->getHTML() );
+		}
+
+		private function adjustSrcSet( $srcset ) : string
+		{
+			$accepted_sources = [];
+			$sources = preg_split( "/,[\s]*/", $srcset );
+			foreach ( $sources as $source )
+			{
+				$parts = explode( ' ', $source );
+				$width = $parts[ count( $parts ) - 1 ];
+				array_pop( $parts );
+				$filename = $this->getASource( implode( '', $parts ) );
+				array_push( $accepted_sources, "$filename $width" );
+			}
+			return implode( ', ', $accepted_sources );
+		}
+
+		private function getASource( $src ) : string
+		{
+			return ( $this->show_version )
+				? $this->loader->getSourceWithVersion( $src )
+				: $this->loader->getSource( $src );
 		}
 
 		private $src;
