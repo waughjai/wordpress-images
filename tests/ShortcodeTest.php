@@ -78,11 +78,14 @@ class ShortcodeTest extends TestCase
 		(
 			'upload-picture',
 			[
-				'src' => '2018/12/photo',
+				'src' => 'photo',
 				'ext' => 'jpg',
-				'sizes' => '320w 240h, 800w 400h, 1200w 800h'
+				'sizes' => '320w 240h, 800w 400h, 1200w 800h',
+				'directory' => '2018/12/',
+				'img-class' => 'thumbnail'
 			]
 		);
 		$this->assertContains( 'https://www.example.com/wp-content/uploads/2018/12/photo-320x240.jpg?m=', $content );
+		$this->assertContains( ' class="thumbnail', $content );
 	}
 }

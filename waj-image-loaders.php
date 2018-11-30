@@ -27,13 +27,13 @@ namespace WAJ\WAJImage
 	add_shortcode
 	(
 		'theme-image',
-		image_function_generator( WPThemeImage::class )
+		ImageShortcodeFunctionGenerator( WPThemeImage::class )
 	);
 
 	add_shortcode
 	(
 		'upload-image',
-		image_function_generator( WPUploadImage::class )
+		ImageShortcodeFunctionGenerator( WPUploadImage::class )
 	);
 
 	add_shortcode
@@ -44,6 +44,7 @@ namespace WAJ\WAJImage
 			$src = TestHashItemString( $atts, 'src' );
 			if ( $src )
 			{
+				// Make sure we don't propagate this to the HTML Attributes list.
 				unset( $atts[ 'src' ] );
 				return ( string )( new HTMLImage( $src, null, $atts ) );
 			}
@@ -54,28 +55,29 @@ namespace WAJ\WAJImage
 	add_shortcode
 	(
 		'theme-picture',
-		picture_function_generator( WPThemePicture::class )
+		PictureShortcodeFunctionGenerator( WPThemePicture::class )
 	);
 
 	add_shortcode
 	(
 		'upload-picture',
-		picture_function_generator( WPUploadPicture::class )
+		PictureShortcodeFunctionGenerator( WPUploadPicture::class )
 	);
 
 	add_shortcode
 	(
 		'picture',
-		picture_function_generator( HTMLPicture::class )
+		PictureShortcodeFunctionGenerator( HTMLPicture::class )
 	);
 
-	function image_function_generator( string $class )
+	function ImageShortcodeFunctionGenerator( string $class )
 	{
 		return function ( $atts ) use ( $class )
 		{
 			$src = TestHashItemString( $atts, 'src' );
 			if ( $src )
 			{
+				// Make sure we don't propagate this to the HTML Attributes list.
 				unset( $atts[ 'src' ] );
 				return ( string )( new $class( $src, $atts ) );
 			}
@@ -83,19 +85,66 @@ namespace WAJ\WAJImage
 		};
 	}
 
-	function picture_function_generator( string $class )
+	function PictureShortcodeFunctionGenerator( string $class )
 	{
 		return function ( $atts ) use ( $class )
 		{
 			$src = TestHashItemString( $atts, 'src' );
 			$ext = TestHashItemString( $atts, 'ext' );
 			$sizes = TestHashItemString( $atts, 'sizes' );
-			if ( $src && $ext )
+			if ( $src && $ext && $sizes )
 			{
-				unset( $atts[ 'src' ], $atts[ 'ext' ] );
+				$atts = TransformShortcodeAttributesToElementAttributes( $atts );
+				// Make sure we don't propagate these to the HTML Attributes list.
+				unset( $atts[ 'src' ], $atts[ 'ext' ], $atts[ 'sizes' ] );
 				return ( string )( new $class( $src, $ext, $sizes, $atts ) );
 			}
 			return '';
 		};
 	}
+
+	function TransformShortcodeAttributesToElementAttributes( array $atts ) : array
+	{
+		// Initialize
+		$element_atts = [];
+		$prefixes = [];
+		$prefix_lengths = [];
+
+		foreach ( PICTURE_ELEMENTS as $element )
+		{
+			// Where we will put the new versions o' the attributes for each element.
+			$element_atts[ $element ] = [];
+			// We need these for the lengths, so we might as well save these.
+			$prefixes[ $element ] = "{$element}-";
+			// Optimization: save string lengths so we don't recalculate these for every attribute x element, but can just reference them directly.
+			$prefix_lengths[ $element ] = strlen( $prefixes[ $element ] );
+		}
+
+		// Convert attributes
+		foreach ( $atts as $attribute_key => $attribute_value )
+		{
+			foreach ( PICTURE_ELEMENTS as $element )
+			{
+				$prefix = $prefixes[ $element ];
+				$prefix_length = $prefix_lengths[ $element ];
+				$starts_with_prefix = ( strpos( $attribute_key, $prefix ) === 0 );
+				if ( $starts_with_prefix )
+				{
+					$attribute_key_without_prefix = substr( $attribute_key, $prefix_length );
+					$element_atts[ $element ][ $attribute_key_without_prefix ] = $attribute_value; // Set new version o' attribute.
+					unset( $atts[ $attribute_key ] ); // Get rid of ol' version o' attribute.
+				}
+			}
+		}
+
+		// Finally, add all new versions o' attributes to original attributes.
+		foreach ( PICTURE_ELEMENTS as $element )
+		{
+			$atts[ "{$element}-attributes" ] = $element_atts[ $element ];
+		}
+
+		return $atts;
+	}
+
+	const PICTURE_ELEMENTS = [ 'img', 'picture', 'source' ];
 }

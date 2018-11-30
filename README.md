@@ -84,6 +84,10 @@ Will generate `<img class="center-img portrait" width="800" height="600" alt="Ki
 
 Will generate `<img src="https://www.domain.com/wp-content/themes/theme-slug/img/photo.jpg?m=#########" alt="" />`
 
+	[upload-picture src="photo" ext="jpg" sizes="320w 240h, 800w 400h, 1200w 800h" directory="2018/12/"]
+
+Will generate `<picture><source srcset="https://www.example.com/wp-content/uploads/2018/12/photo-320x240.jpg?m=1543533541" media="(max-width:320px)"><source srcset="https://www.example.com/wp-content/uploads/2018/12/photo-800x400.jpg?m=1543533546" media="(max-width:800px)"><source srcset="https://www.example.com/wp-content/uploads/2018/12/photo-1200x800.jpg?m=1543533553"><img src="https://www.example.com/wp-content/uploads/2018/12/photo-320x240.jpg?m=1543533541" alt="" /></picture>`
+
 
 ## Changelog
 
