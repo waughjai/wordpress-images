@@ -12,4 +12,10 @@ class WPUploadPictureTest extends TestCase
 		$picture = new WPUploadPicture( 'photo', 'jpg', '320w 240h, 800w 400h, 1200w 800h', [ 'directory' => [ '2018', '12' ] ] );
 		$this->assertContains( ' src="https://www.example.com/wp-content/uploads/2018/12/photo-320x240.jpg?m=', $picture->getHTML() );
 	}
+
+	public function testAutoSizes()
+	{
+		$picture = new WPUploadPicture( '2018/12/photo', 'jpg' );
+		$this->assertContains( ' src="https://www.example.com/wp-content/uploads/2018/12/photo-150x150.jpg?m=', $picture->getHTML() );
+	}
 }
