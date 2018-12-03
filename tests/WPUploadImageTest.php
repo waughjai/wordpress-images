@@ -34,4 +34,10 @@ class WPUploadImageTest extends TestCase
 		$this->assertContains( ' class="center-img portrait"', $image->getHTML() );
 		$this->assertContains( ' alt="King"', $image->getHTML() );
 	}
+
+	public function testAutoSrcset()
+	{
+		$image = new WPUploadImage( '2018/12/photo', [ 'srcset' => 'auto', 'ext' => 'jpg' ] );
+		$this->assertContains( 'srcset="https://www.example.com/wp-content/uploads/2018/12/photo-150x150.jpg', $image->getHTML() );
+	}
 }
