@@ -47,15 +47,21 @@ namespace WaughJ\WPImage
 			$src_strings = [];
 			$size_strings = [];
 			$number_of_sizes = count( $image_sizes );
+			$prev_width = -1;
 			for ( $i = 0; $i < $number_of_sizes; $i++ )
 			{
 				$size = wp_get_attachment_image_src( $id, $image_sizes[ $i ]->getSlug() );
 				$url = $size[ 0 ];
 				$width = $size[ 1 ];
+				if ( $prev_width === $width )
+				{
+					break;
+				}
 				$src_strings[] = self::filterUploadDir( $url ) . " {$width}w";
 				$size_strings[] = ( $i === $number_of_sizes - 1 )
 					? "{$width}px"
 					: "(max-width: {$width}px) {$width}px";
+				$prev_width = $width;
 			}
 			$attributes[ 'srcset' ] = implode( ', ', $src_strings );
 			$attributes[ 'sizes' ] = implode( ', ', $size_strings );
