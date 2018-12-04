@@ -40,7 +40,7 @@ namespace WAJ\WAJImage
 			if ( $id )
 			{
 				// Make sure we don't propagate this to the HTML Attributes list.
-				unset( $atts[ 'id' ] );
+				unset( $atts[ 'id' ], $atts[ 'size' ] );
 				return ( string )( new WPUploadImage( intval( $id ), $size, $atts ) );
 			}
 			return '';
