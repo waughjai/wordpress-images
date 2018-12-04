@@ -3,7 +3,7 @@
 	Plugin Name:  WAJ Image
 	Plugin URI:   https://github.com/waughjai/waj-image-loaders
 	Description:  Classes & shortcodes for making image HTML generation simpler for WordPress.
-	Version:      1.0.0
+	Version:      1.1.0
 	Author:       Jaimeson Waugh
 	Author URI:   https://www.jaimeson-waugh.com
 	License:      GPL2
@@ -33,7 +33,18 @@ namespace WAJ\WAJImage
 	add_shortcode
 	(
 		'upload-image',
-		ImageShortcodeFunctionGenerator( WPUploadImage::class )
+		function ( $atts )
+		{
+			$id = TestHashItemString( $atts, 'id' );
+			$size = TestHashItemString( $atts, 'size' );
+			if ( $id )
+			{
+				// Make sure we don't propagate this to the HTML Attributes list.
+				unset( $atts[ 'id' ] );
+				return ( string )( new WPUploadImage( intval( $id ), $size, $atts ) );
+			}
+			return '';
+		}
 	);
 
 	add_shortcode
@@ -61,7 +72,18 @@ namespace WAJ\WAJImage
 	add_shortcode
 	(
 		'upload-picture',
-		PictureShortcodeFunctionGenerator( WPUploadPicture::class )
+		function ( $atts )
+		{
+			$id = TestHashItemString( $atts, 'id' );
+			if ( $id )
+			{
+				$atts = TransformShortcodeAttributesToElementAttributes( $atts );
+				// Make sure we don't propagate these to the HTML Attributes list.
+				unset( $atts[ 'id' ] );
+				return ( string )( new WPUploadPicture( intval( $id ), $atts ) );
+			}
+			return '';
+		}
 	);
 
 	add_shortcode

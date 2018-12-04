@@ -11,6 +11,13 @@
 		'large_size_h' => '1024'
 	];
 
+	const IMAGE_IDS =
+	[
+		[],
+		[ 'src' => 'demo', 'ext' => 'png' ],
+		[ 'src' => 'photo', 'ext' => 'jpg' ]
+	];
+
 	function get_intermediate_image_sizes()
 	{
 		return [ 'thumbnail', 'medium', 'medium_large', 'large' ];
@@ -54,3 +61,20 @@
 
 	global $shortcodes;
 	$shortcodes = [];
+
+	function wp_get_attachment_image_src( $id, $size )
+	{
+		return ( $size === 'full' )
+		?
+			[
+				"https://www.example.com/wp-content/uploads/2018/12/" . IMAGE_IDS[ $id ][ 'src' ] . '.' . IMAGE_IDS[ $id ][ 'ext' ],
+				2000,
+				2000
+			]
+		:
+			[
+				"https://www.example.com/wp-content/uploads/2018/12/" . IMAGE_IDS[ $id ][ 'src' ] . "-" . WP_OPTIONS[ "{$size}_size_w" ] . "x" . WP_OPTIONS[ "{$size}_size_h" ] . '.' . IMAGE_IDS[ $id ][ 'ext' ],
+				WP_OPTIONS[ "{$size}_size_w" ],
+				WP_OPTIONS[ "{$size}_size_h" ]
+			];
+	}

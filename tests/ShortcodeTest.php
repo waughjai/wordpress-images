@@ -66,7 +66,7 @@ class ShortcodeTest extends TestCase
 		(
 			'upload-image',
 			[
-				'src' => '2018/12/photo.jpg'
+				'id' => '2'
 			]
 		);
 		$this->assertContains( ' src="https://www.example.com/wp-content/uploads/2018/12/photo.jpg?m=', $content );
@@ -78,14 +78,11 @@ class ShortcodeTest extends TestCase
 		(
 			'upload-picture',
 			[
-				'src' => 'photo',
-				'ext' => 'jpg',
-				'sizes' => '320w 240h, 800w 400h, 1200w 800h',
-				'directory' => '2018/12/',
+				'id' => '2',
 				'img-class' => 'thumbnail'
 			]
 		);
-		$this->assertContains( 'https://www.example.com/wp-content/uploads/2018/12/photo-320x240.jpg?m=', $content );
+		$this->assertContains( 'https://www.example.com/wp-content/uploads/2018/12/photo-300x300.jpg?m=', $content );
 		$this->assertContains( ' class="thumbnail', $content );
 	}
 }

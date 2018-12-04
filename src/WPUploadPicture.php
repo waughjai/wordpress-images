@@ -8,18 +8,13 @@ namespace WaughJ\WPImage
 
 	class WPUploadPicture extends HTMLPicture
 	{
-		public function __construct( string $src, string $extension, $sizes = null, array $attributes = [] )
+		public function __construct( int $id, array $attributes = [] )
 		{
-			$loader = WPUploadImage::getFileLoader( $attributes );
-			unset( $attributes[ 'directory' ] ); // Make sure we don't keep this is an attribute that gets passed into the HTML itself.
-			$attributes[ 'loader' ] = $loader;
-
-			if ( $sizes === null || $sizes === 'auto' )
-			{
-				$sizes = self::getDefaultSizes();
-			}
-
-			parent::__construct( $src, $extension, $sizes, $attributes );
+			$attributes[ 'loader' ] = WPUploadImage::getFileLoader();
+			$full_url = wp_get_attachment_image_src( $id, 'full' )[ 0 ];
+			$extension = $attributes[ 'loader' ]->getExtension( $full_url );
+			$src = str_replace( '.' . $extension, '',  WPUploadImage::filterUploadDir( $full_url ) );
+			parent::__construct( $src, $extension, self::getDefaultSizes(), $attributes );
 		}
 
 		private function getDefaultSizes() : array

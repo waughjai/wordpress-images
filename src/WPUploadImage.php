@@ -6,46 +6,56 @@ namespace WaughJ\WPImage
 	use WaughJ\HTMLImage\HTMLImage;
 	use WaughJ\FileLoader\FileLoader;
 	use function WaughJ\WPGetImageSizes\WPGetImageSizes;
+	use function WaughJ\TestHashItem\TestHashItemExists;
 
 	class WPUploadImage extends HTMLImage
 	{
-		public function __construct( string $src, array $attributes = [] )
+		public function __construct( int $id, string $size = null, array $attributes = [] )
 		{
-			$loader = self::getFileLoader( $attributes );
-			unset( $attributes[ 'directory' ] ); // Make sure we don't keep this is an attribute that gets passed into the HTML itself.
-			if ( isset( $attributes[ 'srcset' ] ) && $attributes[ 'srcset' ] === 'auto' && isset( $attributes[ 'ext' ] ) )
+			if ( $size === null ) { $size = 'full'; };
+
+			if ( $size === 'responsive' )
 			{
-				$attributes = self::autoSrcSetAndSizes( $attributes, $src );
-				$src .= '.' . $attributes[ 'ext' ];
-				unset( $attributes[ 'ext' ] );
+				$image_sizes = WPGetImageSizes();
+				$attributes = self::getSrcsetAndSizes( $id, $image_sizes, $attributes );
+				$image = wp_get_attachment_image_src( $id, $image_sizes[ 0 ]->getSlug() );
+				$src = $image[ 0 ];
 			}
-			parent::__construct( $src, $loader, $attributes );
+			else
+			{
+				$image = wp_get_attachment_image_src( $id, $size );
+				$src = $image[ 0 ];
+			}
+			$src = self::filterUploadDir( $src );
+			parent::__construct( $src, self::getFileLoader(), $attributes );
 		}
 
-		public static function getFileLoader( array $attributes ) : FileLoader
+		public static function getFileLoader() : FileLoader
 		{
 			$uploads = wp_upload_dir();
 			$loader = new FileLoader([ 'directory-url' => $uploads[ 'url' ], 'directory-server' => $uploads[ 'path' ] ]);
-			if ( isset( $attributes[ 'directory' ] ) && $attributes[ 'directory' ] )
-			{
-				$loader = $loader->changeSharedDirectory( $attributes[ 'directory' ] );
-			}
 			return $loader;
 		}
 
-		private static function autoSrcSetAndSizes( array $attributes, string $src ) : array
+		public static function filterUploadDir( string $url ) : string
 		{
-			$image_sizes = WPGetImageSizes();
+			return str_replace( wp_upload_dir()[ 'url' ], '', $url );
+		}
+
+		private static function getSrcsetAndSizes( int $id, array $image_sizes, array $attributes ) : array
+		{
 			$src_strings = [];
 			$size_strings = [];
 			$number_of_sizes = count( $image_sizes );
 			for ( $i = 0; $i < $number_of_sizes; $i++ )
 			{
-				$size = $image_sizes[ $i ];
-				$src_strings[] = "{$src}-{$size->getWidth()}x{$size->getHeight()}.{$attributes[ 'ext' ]} {$size->getWidth()}w";
+				$size = wp_get_attachment_image_src( $id, $image_sizes[ $i ]->getSlug() );
+				$url = $size[ 0 ];
+				$width = $size[ 1 ];
+				$src_strings[] = self::filterUploadDir( $url ) . " {$width}w";
 				$size_strings[] = ( $i === $number_of_sizes - 1 )
-					? "{$size->getWidth()}px"
-					: "(max-width: {$size->getWidth()}px) {$size->getWidth()}px";
+					? "{$width}px"
+					: "(max-width: {$width}px) {$width}px";
 			}
 			$attributes[ 'srcset' ] = implode( ', ', $src_strings );
 			$attributes[ 'sizes' ] = implode( ', ', $size_strings );
