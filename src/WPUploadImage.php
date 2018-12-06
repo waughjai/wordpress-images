@@ -26,11 +26,16 @@ namespace WaughJ\WPImage
 				$image = wp_get_attachment_image_src( $id, $size );
 				$src = $image[ 0 ];
 			}
+
 			if ( $src )
 			{
 				$src = self::filterUploadDir( $src );
+				parent::__construct( $src, self::getFileLoader(), $attributes );
 			}
-			parent::__construct( $src, self::getFileLoader(), $attributes );
+			else
+			{
+				parent::__construct( '' );
+			}
 		}
 
 		public static function getFileLoader() : FileLoader

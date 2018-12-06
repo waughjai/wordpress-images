@@ -13,6 +13,12 @@ class WPUploadImageTest extends TestCase
 		$this->assertEquals( $image->getHTML(), '<img src="https://www.example.com/wp-content/uploads/2018/12/demo.png?m=' . filemtime( getcwd() . '/2018/12/demo.png'  ) . '" alt="" />' );
 	}
 
+	public function testNonexistentImage()
+	{
+		$image = new WPUploadImage( 33 );
+		$this->assertEquals( $image->getHTML(), '<img src="" alt="" />' );
+	}
+
 	public function testWithSpecialSize()
 	{
 		$image = new WPUploadImage( 2, 'medium' );
