@@ -17,9 +17,12 @@ namespace WaughJ\WPImage
 			if ( $size === 'responsive' )
 			{
 				$image_sizes = WPGetImageSizes();
-				$attributes = self::getSrcsetAndSizes( $id, $image_sizes, $attributes );
 				$image = wp_get_attachment_image_src( $id, $image_sizes[ 0 ]->getSlug() );
 				$src = $image[ 0 ];
+				if ( $src )
+				{
+					$attributes = self::getSrcsetAndSizes( $id, $image_sizes, $attributes );
+				}
 			}
 			else
 			{
