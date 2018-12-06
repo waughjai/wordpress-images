@@ -26,7 +26,10 @@ namespace WaughJ\WPImage
 				$image = wp_get_attachment_image_src( $id, $size );
 				$src = $image[ 0 ];
 			}
-			$src = self::filterUploadDir( $src );
+			if ( $src )
+			{
+				$src = self::filterUploadDir( $src );
+			}
 			parent::__construct( $src, self::getFileLoader(), $attributes );
 		}
 
