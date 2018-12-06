@@ -3,7 +3,7 @@
 * Tags: image, loader, html generator
 * Requires at least: 4.9.8
 * Tested up to: 4.9.8
-* Stable tag: 1.0.0
+* Stable tag: 1.1.0
 * Requires PHP: 7.0
 * License: GPLv2 or later
 * License URI: https://www.gnu.org/licenses/gpl-2.0.html
@@ -39,15 +39,19 @@ The theme image & picture shortcodes load images from the current theme director
 
 The upload image & picture shortcodes load images from the uploads directory.
 
-All 3 have near the same interface: a mandatory source & optional arguments. For the shortcodes, this means a "src" attribute as well as any other valid HTML attributes; for the classes, it means a hash map as an optional 2nd argument.
+The HTML & Theme classes have near the same interface: a mandatory source & optional arguments. For the shortcodes, this means a "src" attribute as well as any other valid HTML attributes; for the classes, it means a hash map as an optional 2nd argument.
 
-In addition to any valid HTML attributes, the WPThemeImage, WPUploadsImage, WPThemePicture, & WPUploadsPicture classes also accept "directory" & "show-version" attributes. The former, if set, will automatically put the source in the given directory; the "show-version" attribute, if set to false, won't try to find the image's last modified type to give it a version parameter for breaking cache corruption.
+The WPUploadsImage class takes a mandatory ID integer representing the ID o' the image in the media section o' the WordPress admin, the 2nd argument is an optional size string representing the slug o' the size type as registered in WordPress, with "responsive" for automatically an image that uses srcset to dynamically load the size for different window sizes, & the optional 3rd argument is a hash map for extra attributes, as 'bove.
+
+The WPUploadsPicture takes a mandatory ID integer & the optional attributes hash map.
+
+In addition to any valid HTML attributes, the WPThemeImage & WPThemePicture classes also accept "directory" & they & the uploads classes accept the "show-version" attributes. The former, if set, will automatically put the source in the given directory; the "show-version" attribute, if set to false, won't try to find the image's last modified type to give it a version parameter for breaking cache corruption.
 
 If "alt" attribute is not set, an empty 1 will automatically be added to the HTML generated, ensuring that all images made through these will have an alt tag.
 
 To make working with theme image objects with minimal inconvenience for images that are all in the same directory that is not the topmost directory o' the theme directory, you can globally set the inner shared directory using WPThemeImage's static setDefaultSharedDirectory method on the class itself. After that, all initialized WPThemeImage & WPThemePicture instances, including the shortcodes, will automatically use that shared directory if a different 1 isn't provided.
 
-To add HTML attributes to WPThemeImages & WPUploadsImages shortcodes, prefix them with "img-", "picture-", or "source-" depending on what tag you want the attribute given to. For example, to apply a class to the img tag, give the shortcode the attribute "img-class".
+To add HTML attributes to WPThemePicture & WPUploadsPicture shortcodes, prefix them with "img-", "picture-", or "source-" depending on what tag you want the attribute given to. For example, to apply a class to the img tag, give the shortcode the attribute "img-class".
 
 
 ## Installation
@@ -62,34 +66,34 @@ To add HTML attributes to WPThemeImages & WPUploadsImages shortcodes, prefix the
 	use WaughJ\WPImage\WPUploadImage;
 	echo new WPUploadImage
 	(
-		'demo.png',
+		31,
 		[
-			'directory' => '2018/12',
 			'class' => 'center-img portrait',
-			'width' => 800,
-			'height' => 600,
 			'alt' => 'King'
 		]
 	);
 
 &
 
-	[upload-image src="demo.png" directory="2018/12" class="center-img portrait" width="800" height="600" alt="King"]
+	[upload-image id="31" class="center-img portrait" alt="King"]
 
-Will generate `<img class="center-img portrait" width="800" height="600" alt="King" src="https://www.domain.com/wp-content/uploads/2018/12/demo.png?m=#######" />`
+Will generate something like `<img class="center-img portrait" alt="King" src="https://www.domain.com/wp-content/uploads/2018/12/demo-150x150.png?m=1543875777" />`
 
 	use WaughJ\WPImage\WWPThemeImage;
 	WPThemeImage::setDefaultSharedDirectory( 'img' );
 	echo new WPThemeImage( 'photo.jpg' );
 
-Will generate `<img src="https://www.domain.com/wp-content/themes/theme-slug/img/photo.jpg?m=#########" alt="" />`
+Will generate something like `<img src="https://www.domain.com/wp-content/themes/theme-slug/img/photo.jpg?m=1543875777" alt="" />`
 
-	[upload-picture src="photo" ext="jpg" sizes="320w 240h, 800w 400h, 1200w 800h" directory="2018/12/"]
+	[upload-picture id="8"]
 
-Will generate `<picture><source srcset="https://www.example.com/wp-content/uploads/2018/12/photo-320x240.jpg?m=1543533541" media="(max-width:320px)"><source srcset="https://www.example.com/wp-content/uploads/2018/12/photo-800x400.jpg?m=1543533546" media="(max-width:800px)"><source srcset="https://www.example.com/wp-content/uploads/2018/12/photo-1200x800.jpg?m=1543533553"><img src="https://www.example.com/wp-content/uploads/2018/12/photo-320x240.jpg?m=1543533541" alt="" /></picture>`
+Will generate something like `<picture><source srcset="https://www.example.com/wp-content/uploads/2018/12/photo-150x150.jpg?m=1543875777" media="(max-width:150px)"><source srcset="https://www.example.com/wp-content/uploads/2018/12/photo-300x300.jpg?m=1543875781" media="(max-width:300px)"><source srcset="https://www.example.com/wp-content/uploads/2018/12/photo-768x768.jpg?m=1543875785" media="(max-width:768px)"><source srcset="https://www.example.com/wp-content/uploads/2018/12/photo-1024x1024.jpg?m=1543875831"><img src="https://www.example.com/wp-content/uploads/2018/12/photo-150x150.jpg?m=1543875777" alt="" /></picture>`
 
 
 ## Changelog
+
+### 1.1
+* Make uploads classes mo' automatic.
 
 ### 1.0
 * Initial stable version.
