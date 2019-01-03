@@ -13,7 +13,7 @@
     "require": {
 		"php": ">=7.0",
 		"waughj/wp-theme-image": "*",
-		"waughj/wp-theme-picture": "*",
+		"waughj/wp-theme-picture": ">=0.2.0",
 		"waughj/wp-upload-image": ">=0.1.1",
 		"waughj/wp-upload-picture": ">=0.2.4",
 		"waughj/wp-theme-option": ">=0.3.0"
