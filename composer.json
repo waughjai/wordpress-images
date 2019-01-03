@@ -15,8 +15,7 @@
 		"waughj/wp-theme-image": "*",
 		"waughj/wp-theme-picture": "*",
 		"waughj/wp-upload-image": ">=0.1.1",
-		"waughj/wp-upload-picture": ">=0.2.3",
-		"waughj/wp-theme-option": ">=0.3.0",
-		"waughj/wp-admin-menu-manager": ">=0.4.0"
+		"waughj/wp-upload-picture": ">=0.2.4",
+		"waughj/wp-theme-option": ">=0.3.0"
     }
 }
