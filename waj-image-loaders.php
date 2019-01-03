@@ -3,7 +3,7 @@
 	Plugin Name:  WAJ Image
 	Plugin URI:   https://github.com/waughjai/waj-image-loaders
 	Description:  Classes & shortcodes for making image HTML generation simpler for WordPress.
-	Version:      1.3.0
+	Version:      2.0.0
 	Author:       Jaimeson Waugh
 	Author URI:   https://www.jaimeson-waugh.com
 	License:      GPL2
@@ -16,16 +16,16 @@ namespace WAJ\WAJImage
 {
 	require_once( 'vendor/autoload.php' );
 
-	use WaughJ\WPImage\WPThemeImage;
-	use WaughJ\WPImage\WPUploadImage;
 	use WaughJ\HTMLImage\HTMLImage;
-	use WaughJ\WPImage\WPThemePicture;
-	use WaughJ\WPImage\WPUploadPicture;
 	use WaughJ\HTMLPicture\HTMLPicture;
 	use function WaughJ\TestHashItem\TestHashItemString;
+	use WaughJ\WPThemeImage\WPThemeImage;
 	use WaughJ\WPThemeOption\WPThemeOptionsPageManager;
 	use WaughJ\WPThemeOption\WPThemeOptionsSection;
 	use WaughJ\WPThemeOption\WPThemeOption;
+	use WaughJ\WPThemePicture\WPThemePicture;
+	use WaughJ\WPUploadImage\WPUploadImage;
+	use WaughJ\WPUploadPicture\WPUploadPicture;
 
 
 
