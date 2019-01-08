@@ -3,7 +3,7 @@ Contributors: waughjai
 Tags: image, loader, html generator
 Requires at least: 5.0.0
 Tested up to: 5.0.1
-Stable tag: 2.0.0
+Stable tag: 2.0.1
 Requires PHP: 7.0
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
@@ -91,6 +91,9 @@ Will generate something like `<picture><source srcset="https://www.example.com/w
 
 
 == Changelog ==
+
+= 2.0.1 =
+* Fix buggy WPUploadImage class.
 
 = 2.0 =
 * Refactor into split classes.
