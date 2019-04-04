@@ -2,8 +2,8 @@
 Contributors: waughjai
 Tags: image, loader, html generator
 Requires at least: 5.0.0
-Tested up to: 5.0.1
-Stable tag: 2.0.2
+Tested up to: 5.1.1
+Stable tag: 2.1.0
 Requires PHP: 7.0
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
@@ -92,8 +92,8 @@ Will generate something like `<picture><source srcset="https://www.example.com/w
 
 == Changelog ==
 
-= 2.0.2 =
-* Fix WPThemePicture bug changing default theme shared directory.
+= 2.1.0
+* Update dependencies, test for WordPress 5.1.
 
 = 2.0.1 =
 * Fix buggy WPUploadImage class.
