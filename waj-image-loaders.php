@@ -3,7 +3,7 @@
 	Plugin Name:  WAJ Image
 	Plugin URI:   https://github.com/waughjai/waj-image-loaders
 	Description:  Classes & shortcodes for making image HTML generation simpler for WordPress.
-	Version:      2.1.1
+	Version:      2.2.0
 	Author:       Jaimeson Waugh
 	Author URI:   https://www.jaimeson-waugh.com
 	License:      GPL2
@@ -18,6 +18,7 @@ namespace WAJ\WAJImage
 
 	use WaughJ\HTMLImage\HTMLImage;
 	use WaughJ\HTMLPicture\HTMLPicture;
+	use function WaughJ\TestHashItem\TestHashItemExists;
 	use function WaughJ\TestHashItem\TestHashItemString;
 	use WaughJ\WPThemeImage\WPThemeImage;
 	use WaughJ\WPThemeOption\WPThemeOptionsPageManager;
@@ -26,6 +27,7 @@ namespace WAJ\WAJImage
 	use WaughJ\WPThemePicture\WPThemePicture;
 	use WaughJ\WPUploadImage\WPUploadImage;
 	use WaughJ\WPUploadPicture\WPUploadPicture;
+	use WaughJ\WPPostThumbnail\WPPostThumbnail;
 
 
 
@@ -45,6 +47,18 @@ namespace WAJ\WAJImage
 	//  SHORTCODES
 	//
 	//////////////////////////////////////////////////////////
+
+		add_shortcode
+		(
+			'thumbnail',
+			function( $args )
+			{
+				$thumbnail = ( is_array( $args ) )
+					? new WPPostThumbnail( intval( TestHashItemExists( $args, 'id', get_the_ID() ) ), TransformShortcodeAttributesToElementAttributes( $args )[ 'img-attributes' ] )
+					:  new WPPostThumbnail( get_the_ID() );
+				return $thumbnail->getHTML();
+			}
+		);
 
 		add_shortcode
 		(

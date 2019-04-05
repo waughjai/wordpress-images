@@ -3,7 +3,7 @@ Contributors: waughjai
 Tags: image, loader, html generator
 Requires at least: 5.0.0
 Tested up to: 5.1.1
-Stable tag: 2.1.1
+Stable tag: 2.2.0
 Requires PHP: 7.0
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
@@ -22,6 +22,7 @@ Shorcodes:
 * [picture src="%baseurl%" ext="%ext%" sizes="%sizes%"]
 * [theme-picture src="%baseurl%" ext="%ext%" sizes="%sizes%"]
 * [upload-picture src="%baseurl%" ext="%ext%" sizes="%sizes%"]
+* [thumbnail]
 
 Classes:
 * WaughJ\HTMLImage\HTMLImage
@@ -30,6 +31,7 @@ Classes:
 * WaughJ\HTMLPicture\HTMLPicture
 * WaughJ\WPThemePicture\WPThemePicture
 * WaughJ\WPUploadPicture\WPUploadPicture
+* WaughJ\WPPostThumbnail\WPPostThumbnail
 
 The regular image shortcode loads the exact source URL given, without a cache-corruption-breaking version parameter. It is mainly for use by other classes, like the next 2.
 
@@ -38,6 +40,8 @@ The regular picture shortcode loads %base%.%ext%, as well as extra sources based
 The theme image & picture shortcodes load images from the current theme directory.
 
 The upload image & picture shortcodes load images from the uploads directory.
+
+The thumbnail shortcode loads a post's thumbnail. If the id attribute is given, it loads the thumbnail o' that ID. If no ID is given, it tries to supply the ID o' whatever the current post is ( whatever get_the_ID() gives ). Image attributes can be given through img-%attribute-name%. For example, to set the image's class, add img-class="%class%".
 
 The HTML & Theme classes have near the same interface: a mandatory source & optional arguments. For the shortcodes, this means a "src" attribute as well as any other valid HTML attributes; for the classes, it means a hash map as an optional 2nd argument.
 
@@ -91,6 +95,9 @@ Will generate something like `<picture><source srcset="https://www.example.com/w
 
 
 == Changelog ==
+
+= 2.2.0 =
+* Add WPPostThumbnail class & shortcode for easily getting post thumbnail.
 
 = 2.1.1 =
 * Fix WPThemePicture bug changing default theme shared directory.
