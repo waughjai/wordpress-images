@@ -3,7 +3,7 @@
 * Tags: image, loader, html generator
 * Requires at least: 5.0.0
 * Tested up to: 5.1.1
-* Stable tag: 2.2.0
+* Stable tag: 2.2.1
 * Requires PHP: 7.0
 * License: GPLv2 or later
 * License URI: https://www.gnu.org/licenses/gpl-2.0.html
@@ -95,6 +95,9 @@ Will generate something like `<picture><source srcset="https://www.example.com/w
 
 
 ## Changelog
+
+### 2.2.1
+* Turn on thumbnail support by default.
 
 ### 2.2.0
 * Add WPPostThumbnail class & shortcode for easily getting post thumbnail.

@@ -3,7 +3,7 @@
 	Plugin Name:  WAJ Image
 	Plugin URI:   https://github.com/waughjai/waj-image-loaders
 	Description:  Classes & shortcodes for making image HTML generation simpler for WordPress.
-	Version:      2.2.0
+	Version:      2.2.1
 	Author:       Jaimeson Waugh
 	Author URI:   https://www.jaimeson-waugh.com
 	License:      GPL2
@@ -28,6 +28,14 @@ namespace WAJ\WAJImage
 	use WaughJ\WPUploadImage\WPUploadImage;
 	use WaughJ\WPUploadPicture\WPUploadPicture;
 	use WaughJ\WPPostThumbnail\WPPostThumbnail;
+
+
+	//
+	//  Ensure WordPress can already use thumbnails.
+	//
+	//////////////////////////////////////////////////////////
+
+		add_theme_support( 'post-thumbnails' );
 
 
 
