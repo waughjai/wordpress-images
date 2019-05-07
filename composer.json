@@ -12,6 +12,7 @@
     "type": "library",
     "require": {
 		"php": ">=7.0",
+        "waughj/directory": ">=0.3.1",
 		"waughj/wp-theme-image": "*",
 		"waughj/wp-theme-picture": ">=0.2.2",
 		"waughj/wp-upload-image": ">=0.1.2",

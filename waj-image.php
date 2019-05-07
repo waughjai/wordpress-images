@@ -3,7 +3,7 @@
 	Plugin Name:  WAJ Image
 	Plugin URI:   https://github.com/waughjai/waj-image-loaders
 	Description:  Classes & shortcodes for making image HTML generation simpler for WordPress.
-	Version:      2.2.1
+	Version:      2.2.2
 	Author:       Jaimeson Waugh
 	Author URI:   https://www.jaimeson-waugh.com
 	License:      GPL2
