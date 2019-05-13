@@ -30,14 +30,6 @@ namespace WAJ\WAJImage
 	use WaughJ\WPPostThumbnail\WPPostThumbnail;
 
 
-	//
-	//  Ensure WordPress can already use thumbnails.
-	//
-	//////////////////////////////////////////////////////////
-
-		add_theme_support( 'post-thumbnails' );
-
-
 
 	//
 	//  ADMIN THEME IMAGE DIRECTORY
