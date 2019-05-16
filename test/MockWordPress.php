@@ -35,15 +35,15 @@
 
 	function get_stylesheet_directory()
 	{
-		return getcwd();
+		return getcwd() . '/test/img';
 	}
 
 	function wp_upload_dir()
 	{
 		return
 		[
-			'basedir' => getcwd(),
-			'path' => getcwd() . '/2018/12',
+			'basedir' => getcwd() . '/test/img',
+			'path' => getcwd() . '/test/img/2018/12',
 			'baseurl' => 'https://www.example.com/wp-content/uploads',
 			'url' => 'https://www.example.com/wp-content/uploads/2018/12'
 		];

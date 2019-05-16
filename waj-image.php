@@ -12,197 +12,232 @@
 	*/
 
 declare( strict_types = 1 );
-namespace WAJ\WAJImage
-{
-	require_once( 'vendor/autoload.php' );
+namespace WAJ\WAJImage;
 
-	use WaughJ\HTMLImage\HTMLImage;
-	use WaughJ\HTMLPicture\HTMLPicture;
-	use function WaughJ\TestHashItem\TestHashItemExists;
-	use function WaughJ\TestHashItem\TestHashItemString;
-	use WaughJ\WPThemeImage\WPThemeImage;
-	use WaughJ\WPThemeOption\WPThemeOptionsPageManager;
-	use WaughJ\WPThemeOption\WPThemeOptionsSection;
-	use WaughJ\WPThemeOption\WPThemeOption;
-	use WaughJ\WPThemePicture\WPThemePicture;
-	use WaughJ\WPUploadImage\WPUploadImage;
-	use WaughJ\WPUploadPicture\WPUploadPicture;
-	use WaughJ\WPPostThumbnail\WPPostThumbnail;
+require_once( 'vendor/autoload.php' );
 
-
-
-	//
-	//  ADMIN THEME IMAGE DIRECTORY
-	//
-	//////////////////////////////////////////////////////////
-
-		$page = WPThemeOptionsPageManager::initializeIfNotAlreadyInitialized( 'directories', 'Directories' );
-		$section = new WPThemeOptionsSection( $page, 'theme-image', 'Theme Image' );
-		$option = new WPThemeOption( $section, 'theme-image-directory', 'Theme Image Directory' );
-		WPThemeImage::setDefaultSharedDirectory( $option->getOptionValue() );
+use WaughJ\FileLoader\MissingFileException;
+use WaughJ\HTMLImage\HTMLImage;
+use WaughJ\HTMLPicture\HTMLPicture;
+use function WaughJ\TestHashItem\TestHashItemExists;
+use function WaughJ\TestHashItem\TestHashItemString;
+use WaughJ\WPThemeImage\WPThemeImage;
+use WaughJ\WPThemeOption\WPThemeOptionsPageManager;
+use WaughJ\WPThemeOption\WPThemeOptionsSection;
+use WaughJ\WPThemeOption\WPThemeOption;
+use WaughJ\WPThemePicture\WPThemePicture;
+use WaughJ\WPUploadImage\WPUploadImage;
+use WaughJ\WPUploadPicture\WPUploadPicture;
+use WaughJ\WPPostThumbnail\WPPostThumbnail;
 
 
 
-	//
-	//  SHORTCODES
-	//
-	//////////////////////////////////////////////////////////
+//
+//  ADMIN THEME IMAGE DIRECTORY
+//
+//////////////////////////////////////////////////////////
 
-		add_shortcode
-		(
-			'thumbnail',
-			function( $args )
+	$page = WPThemeOptionsPageManager::initializeIfNotAlreadyInitialized( 'directories', 'Directories' );
+	$section = new WPThemeOptionsSection( $page, 'theme-image', 'Theme Image' );
+	$option = new WPThemeOption( $section, 'theme-image-directory', 'Theme Image Directory' );
+	WPThemeImage::setDefaultSharedDirectory( $option->getOptionValue() );
+
+
+
+//
+//  SHORTCODES
+//
+//////////////////////////////////////////////////////////
+
+	add_shortcode
+	(
+		'thumbnail',
+		function( $args )
+		{
+			$thumbnail = ( is_array( $args ) )
+				? new WPPostThumbnail( intval( TestHashItemExists( $args, 'id', get_the_ID() ) ), TransformShortcodeAttributesToElementAttributes( $args )[ 'img-attributes' ] )
+				:  new WPPostThumbnail( get_the_ID() );
+			return $thumbnail->getHTML();
+		}
+	);
+
+	add_shortcode
+	(
+		'theme-image',
+		function ( $atts )
+		{
+			$src = ( string )( $atts[ 'src' ] ?? '' );
+			if ( $src !== '' )
 			{
-				$thumbnail = ( is_array( $args ) )
-					? new WPPostThumbnail( intval( TestHashItemExists( $args, 'id', get_the_ID() ) ), TransformShortcodeAttributesToElementAttributes( $args )[ 'img-attributes' ] )
-					:  new WPPostThumbnail( get_the_ID() );
-				return $thumbnail->getHTML();
-			}
-		);
+				// Make sure we don't propagate this to the HTML Attributes list.
+				unset( $atts[ 'src' ] );
 
-		add_shortcode
-		(
-			'theme-image',
-			ImageShortcodeFunctionGenerator( WPThemeImage::class )
-		);
+				// Unfortunately, WordPress treats all atts as strings & PHP considers the string “false” to be truthy,
+				// so we must convert it to a true false boolean.
+				$atts = FixShowVersionAtt( $atts );
 
-		add_shortcode
-		(
-			'upload-image',
-			function ( $atts )
-			{
-				$id = TestHashItemString( $atts, 'id' );
-				$size = TestHashItemString( $atts, 'size' );
-				if ( $id )
+				try
 				{
-					// Make sure we don't propagate this to the HTML Attributes list.
-					unset( $atts[ 'id' ], $atts[ 'size' ] );
+					return ( string )( new WPThemeImage( $src, $atts ) );
+				}
+				catch ( MissingFileException $e ) // Since shortcodes should be mo’ user-friendly, we don’t want any website-breaking exceptions getting through.
+				{
+					return $e->getFallbackContent();
+				}
+			}
+			return '';
+		}
+	);
+
+	add_shortcode
+	(
+		'upload-image',
+		function ( $atts )
+		{
+			$id = TestHashItemString( $atts, 'media-id' );
+			$size = TestHashItemString( $atts, 'size' );
+			if ( $id )
+			{
+				// Make sure we don't propagate this to the HTML Attributes list.
+				unset( $atts[ 'media-id' ], $atts[ 'size' ] );
+
+				// Unfortunately, WordPress treats all atts as strings & PHP considers the string “false” to be truthy,
+				// so we must convert it to a true false boolean.
+				$atts = FixShowVersionAtt( $atts );
+
+				try
+				{
 					return ( string )( new WPUploadImage( intval( $id ), $size, $atts ) );
 				}
-				return '';
-			}
-		);
-
-		add_shortcode
-		(
-			'image',
-			function ( $atts )
-			{
-				$src = TestHashItemString( $atts, 'src' );
-				if ( $src )
+				catch ( MissingFileException $e ) // Since shortcodes should be mo’ user-friendly, we don’t want any website-breaking exceptions getting through.
 				{
-					// Make sure we don't propagate this to the HTML Attributes list.
-					unset( $atts[ 'src' ] );
-					return ( string )( new HTMLImage( $src, null, $atts ) );
+					return $e->getFallbackContent();
 				}
-				return '';
 			}
-		);
-
-		add_shortcode
-		(
-			'theme-picture',
-			PictureShortcodeFunctionGenerator( WPThemePicture::class )
-		);
-
-		add_shortcode
-		(
-			'upload-picture',
-			function ( $atts )
-			{
-				$id = TestHashItemString( $atts, 'id' );
-				if ( $id )
-				{
-					$atts = TransformShortcodeAttributesToElementAttributes( $atts );
-					// Make sure we don't propagate these to the HTML Attributes list.
-					unset( $atts[ 'id' ] );
-					return ( string )( new WPUploadPicture( intval( $id ), $atts ) );
-				}
-				return '';
-			}
-		);
-
-		add_shortcode
-		(
-			'picture',
-			PictureShortcodeFunctionGenerator( HTMLPicture::class )
-		);
-
-		function ImageShortcodeFunctionGenerator( string $class )
-		{
-			return function ( $atts ) use ( $class )
-			{
-				$src = TestHashItemString( $atts, 'src' );
-				if ( $src )
-				{
-					// Make sure we don't propagate this to the HTML Attributes list.
-					unset( $atts[ 'src' ] );
-					return ( string )( new $class( $src, $atts ) );
-				}
-				return '';
-			};
+			return '';
 		}
+	);
 
-		function PictureShortcodeFunctionGenerator( string $class )
+	add_shortcode
+	(
+		'image',
+		function ( $atts )
 		{
-			return function ( $atts ) use ( $class )
+			$src = TestHashItemString( $atts, 'src' );
+			if ( $src )
 			{
-				$src = TestHashItemString( $atts, 'src' );
-				$ext = TestHashItemString( $atts, 'ext' );
-				$sizes = TestHashItemString( $atts, 'sizes' );
-				if ( $src && $ext && $sizes )
-				{
-					$atts = TransformShortcodeAttributesToElementAttributes( $atts );
-					// Make sure we don't propagate these to the HTML Attributes list.
-					unset( $atts[ 'src' ], $atts[ 'ext' ], $atts[ 'sizes' ] );
-					return ( string )( new $class( $src, $ext, $sizes, $atts ) );
-				}
-				return '';
-			};
+				// Make sure we don't propagate this to the HTML Attributes list.
+				unset( $atts[ 'src' ] );
+				return ( string )( new HTMLImage( $src, null, $atts ) );
+			}
+			return '';
 		}
+	);
 
-		function TransformShortcodeAttributesToElementAttributes( array $atts ) : array
+	add_shortcode
+	(
+		'theme-picture',
+		PictureShortcodeFunctionGenerator( WPThemePicture::class )
+	);
+
+	add_shortcode
+	(
+		'upload-picture',
+		function ( $atts )
 		{
-			// Initialize
-			$element_atts = [];
-			$prefixes = [];
-			$prefix_lengths = [];
-
-			foreach ( PICTURE_ELEMENTS as $element )
+			$id = TestHashItemString( $atts, 'id' );
+			if ( $id )
 			{
-				// Where we will put the new versions o' the attributes for each element.
-				$element_atts[ $element ] = [];
-				// We need these for the lengths, so we might as well save these.
-				$prefixes[ $element ] = "{$element}-";
-				// Optimization: save string lengths so we don't recalculate these for every attribute x element, but can just reference them directly.
-				$prefix_lengths[ $element ] = strlen( $prefixes[ $element ] );
+				$atts = TransformShortcodeAttributesToElementAttributes( $atts );
+				// Make sure we don't propagate these to the HTML Attributes list.
+				unset( $atts[ 'id' ] );
+				return ( string )( new WPUploadPicture( intval( $id ), $atts ) );
 			}
-
-			// Convert attributes
-			foreach ( $atts as $attribute_key => $attribute_value )
-			{
-				foreach ( PICTURE_ELEMENTS as $element )
-				{
-					$prefix = $prefixes[ $element ];
-					$prefix_length = $prefix_lengths[ $element ];
-					$starts_with_prefix = ( strpos( $attribute_key, $prefix ) === 0 );
-					if ( $starts_with_prefix )
-					{
-						$attribute_key_without_prefix = substr( $attribute_key, $prefix_length );
-						$element_atts[ $element ][ $attribute_key_without_prefix ] = $attribute_value; // Set new version o' attribute.
-						unset( $atts[ $attribute_key ] ); // Get rid of ol' version o' attribute.
-					}
-				}
-			}
-
-			// Finally, add all new versions o' attributes to original attributes.
-			foreach ( PICTURE_ELEMENTS as $element )
-			{
-				$atts[ "{$element}-attributes" ] = $element_atts[ $element ];
-			}
-
-			return $atts;
+			return '';
 		}
+	);
 
-		const PICTURE_ELEMENTS = [ 'img', 'picture', 'source' ];
+	add_shortcode
+	(
+		'picture',
+		PictureShortcodeFunctionGenerator( HTMLPicture::class )
+	);
+
+
+
+//
+//  HELPER FUNCTIONS
+//
+//////////////////////////////////////////////////////////
+
+	function PictureShortcodeFunctionGenerator( string $class )
+	{
+		return function ( $atts ) use ( $class )
+		{
+			$src = TestHashItemString( $atts, 'src' );
+			$ext = TestHashItemString( $atts, 'ext' );
+			$sizes = TestHashItemString( $atts, 'sizes' );
+			if ( $src && $ext && $sizes )
+			{
+				$atts = TransformShortcodeAttributesToElementAttributes( $atts );
+				// Make sure we don't propagate these to the HTML Attributes list.
+				unset( $atts[ 'src' ], $atts[ 'ext' ], $atts[ 'sizes' ] );
+				return ( string )( new $class( $src, $ext, $sizes, $atts ) );
+			}
+			return '';
+		};
 	}
+
+	function TransformShortcodeAttributesToElementAttributes( array $atts ) : array
+	{
+		// Initialize
+		$element_atts = [];
+		$prefixes = [];
+		$prefix_lengths = [];
+
+		foreach ( PICTURE_ELEMENTS as $element )
+		{
+			// Where we will put the new versions o' the attributes for each element.
+			$element_atts[ $element ] = [];
+			// We need these for the lengths, so we might as well save these.
+			$prefixes[ $element ] = "{$element}-";
+			// Optimization: save string lengths so we don't recalculate these for every attribute x element, but can just reference them directly.
+			$prefix_lengths[ $element ] = strlen( $prefixes[ $element ] );
+		}
+
+		// Convert attributes
+		foreach ( $atts as $attribute_key => $attribute_value )
+		{
+			foreach ( PICTURE_ELEMENTS as $element )
+			{
+				$prefix = $prefixes[ $element ];
+				$prefix_length = $prefix_lengths[ $element ];
+				$starts_with_prefix = ( strpos( $attribute_key, $prefix ) === 0 );
+				if ( $starts_with_prefix )
+				{
+					$attribute_key_without_prefix = substr( $attribute_key, $prefix_length );
+					$element_atts[ $element ][ $attribute_key_without_prefix ] = $attribute_value; // Set new version o' attribute.
+					unset( $atts[ $attribute_key ] ); // Get rid of ol' version o' attribute.
+				}
+			}
+		}
+
+		// Finally, add all new versions o' attributes to original attributes.
+		foreach ( PICTURE_ELEMENTS as $element )
+		{
+			$atts[ "{$element}-attributes" ] = $element_atts[ $element ];
+		}
+
+		return $atts;
+	}
+
+	function FixShowVersionAtt( array $atts ) : array
+	{
+		if ( ( $atts[ 'show-version' ] ?? null ) === 'false' )
+		{
+			$atts[ 'show-version' ] = false;
+		}
+		return $atts;
+	}
+
+	const PICTURE_ELEMENTS = [ 'img', 'picture', 'source' ];
