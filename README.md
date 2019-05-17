@@ -3,7 +3,7 @@
 * Tags: image, loader, html generator
 * Requires at least: 5.0.0
 * Tested up to: 5.2
-* Stable tag: 2.2.2
+* Stable tag: 3.0.0
 * Requires PHP: 7.0
 * License: GPLv2 or later
 * License URI: https://www.gnu.org/licenses/gpl-2.0.html
@@ -41,7 +41,7 @@ The theme image & picture shortcodes load images from the current theme director
 
 The upload image & picture shortcodes load images from the uploads directory.
 
-The thumbnail shortcode loads a post's thumbnail. If the id attribute is given, it loads the thumbnail o' that ID. If no ID is given, it tries to supply the ID o' whatever the current post is ( whatever get_the_ID() gives ). Image attributes can be given through img-%attribute-name%. For example, to set the image's class, add img-class="%class%".
+The thumbnail shortcode loads a post's thumbnail. If the post-id attribute is given, it loads the thumbnail o' that ID. If no ID is given, it tries to supply the ID o' whatever the current post is ( whatever get_the_ID() gives ). Img, source, & picture attributes can be given through %tag-name%-%attribute-name%. For example, to set the image's class, add img-class="%class%".
 
 The HTML & Theme classes have near the same interface: a mandatory source & optional arguments. For the shortcodes, this means a "src" attribute as well as any other valid HTML attributes; for the classes, it means a hash map as an optional 2nd argument.
 
@@ -79,7 +79,7 @@ To add HTML attributes to WPThemePicture & WPUploadPicture shortcodes, prefix th
 
 &
 
-	[upload-image id="31" class="center-img portrait" alt="King"]
+	[upload-image media-id="31" class="center-img portrait" alt="King"]
 
 Will generate something like `<img class="center-img portrait" alt="King" src="https://www.domain.com/wp-content/uploads/2018/12/demo-150x150.png?m=1543875777" />`
 
@@ -89,12 +89,18 @@ Will generate something like `<img class="center-img portrait" alt="King" src="h
 
 Will generate something like `<img src="https://www.domain.com/wp-content/themes/theme-slug/img/photo.jpg?m=1543875777" alt="" />`
 
-	[upload-picture id="8"]
+	[upload-picture media-id="8"]
 
 Will generate something like `<picture><source srcset="https://www.example.com/wp-content/uploads/2018/12/photo-150x150.jpg?m=1543875777" media="(max-width:150px)"><source srcset="https://www.example.com/wp-content/uploads/2018/12/photo-300x300.jpg?m=1543875781" media="(max-width:300px)"><source srcset="https://www.example.com/wp-content/uploads/2018/12/photo-768x768.jpg?m=1543875785" media="(max-width:768px)"><source srcset="https://www.example.com/wp-content/uploads/2018/12/photo-1024x1024.jpg?m=1543875831"><img src="https://www.example.com/wp-content/uploads/2018/12/photo-150x150.jpg?m=1543875777" alt="" /></picture>`
 
+For mo’ information on how each class works, check out their documentation @ https://github.com/waughjai?tab=repositories
 
 ## Changelog
+
+### 3.0.0
+* Revamp all shortcodes & underlying classes.
+* WPUploadImage & WPUploadPicture shortcode attributes now use “media-id” for image ID & WPPostThumbnail now uses “post-id” ’stead o’ either using just “id” so they don’t conflict with setting id HTML attribute.
+* All classes have improved error-handling so that they all throw exceptions. Shortcodes catch all exceptions so unsightly errors don’t show up on public website.
 
 ### 2.2.1
 * Turn on thumbnail support by default.
