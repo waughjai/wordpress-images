@@ -26,6 +26,7 @@ use WaughJ\WPThemeOption\WPThemeOptionsPageManager;
 use WaughJ\WPThemeOption\WPThemeOptionsSection;
 use WaughJ\WPThemeOption\WPThemeOption;
 use WaughJ\WPThemePicture\WPThemePicture;
+use WaughJ\WPUploadImage\WPMissingMediaException;
 use WaughJ\WPUploadImage\WPUploadImage;
 use WaughJ\WPUploadPicture\WPUploadPicture;
 use WaughJ\WPPostThumbnail\WPPostThumbnail;
@@ -54,10 +55,29 @@ use WaughJ\WPPostThumbnail\WPPostThumbnail;
 		'thumbnail',
 		function( $args )
 		{
-			$thumbnail = ( is_array( $args ) )
-				? new WPPostThumbnail( intval( TestHashItemExists( $args, 'id', get_the_ID() ) ), TransformShortcodeAttributesToElementAttributes( $args )[ 'img-attributes' ] )
-				:  new WPPostThumbnail( get_the_ID() );
-			return $thumbnail->getHTML();
+			$post_id = intval( $args[ 'post-id' ] ?? get_the_ID() );
+
+			if ( is_array( $args ) )
+			{
+				unset( $args[ 'post-id' ] );
+			}
+			else
+			{
+				$args = [];
+			}
+
+			try
+			{
+				return ( string )( new WPPostThumbnail( $post_id, TransformShortcodeAttributesToElementAttributes( $args ) ) );
+			}
+			catch ( WPMissingMediaException $e )
+			{
+				return ''; // No fallback info to give, so just return nothing.
+			}
+			catch ( MissingFileException $e ) // Since shortcodes should be mo’ user-friendly, we don’t want any website-breaking exceptions getting through.
+			{
+				return ( string )( $e->getFallbackContent() );
+			}
 		}
 	);
 
@@ -82,7 +102,7 @@ use WaughJ\WPPostThumbnail\WPPostThumbnail;
 				}
 				catch ( MissingFileException $e ) // Since shortcodes should be mo’ user-friendly, we don’t want any website-breaking exceptions getting through.
 				{
-					return $e->getFallbackContent();
+					return ( string )( $e->getFallbackContent() );
 				}
 			}
 			return '';
@@ -109,9 +129,13 @@ use WaughJ\WPPostThumbnail\WPPostThumbnail;
 				{
 					return ( string )( new WPUploadImage( intval( $id ), $size, $atts ) );
 				}
+				catch ( WPMissingMediaException $e )
+				{
+					return ''; // No fallback info to give, so just return nothing.
+				}
 				catch ( MissingFileException $e ) // Since shortcodes should be mo’ user-friendly, we don’t want any website-breaking exceptions getting through.
 				{
-					return $e->getFallbackContent();
+					return ( string )( $e->getFallbackContent() );
 				}
 			}
 			return '';
@@ -145,13 +169,29 @@ use WaughJ\WPPostThumbnail\WPPostThumbnail;
 		'upload-picture',
 		function ( $atts )
 		{
-			$id = TestHashItemString( $atts, 'id' );
+			$id = TestHashItemString( $atts, 'media-id' );
 			if ( $id )
 			{
 				$atts = TransformShortcodeAttributesToElementAttributes( $atts );
 				// Make sure we don't propagate these to the HTML Attributes list.
-				unset( $atts[ 'id' ] );
-				return ( string )( new WPUploadPicture( intval( $id ), $atts ) );
+				unset( $atts[ 'media-id' ] );
+
+				// Unfortunately, WordPress treats all atts as strings & PHP considers the string “false” to be truthy,
+				// so we must convert it to a true false boolean.
+				$atts = FixShowVersionAtt( $atts );
+
+				try
+				{
+					return ( string )( new WPUploadPicture( intval( $id ), $atts ) );
+				}
+				catch ( WPMissingMediaException $e )
+				{
+					return ''; // No fallback info to give, so just return nothing.
+				}
+				catch ( MissingFileException $e ) // Since shortcodes should be mo’ user-friendly, we don’t want any website-breaking exceptions getting through.
+				{
+					return ( string )( $e->getFallbackContent() );
+				}
 			}
 			return '';
 		}
@@ -177,12 +217,40 @@ use WaughJ\WPPostThumbnail\WPPostThumbnail;
 			$src = TestHashItemString( $atts, 'src' );
 			$ext = TestHashItemString( $atts, 'ext' );
 			$sizes = TestHashItemString( $atts, 'sizes' );
-			if ( $src && $ext && $sizes )
+			if ( $src && $sizes )
 			{
+				// If extension not specifically given, hint it through the src.
+				if ( $ext === null )
+				{
+					$parts = explode( '.', $src );
+					$ext = ( count( $parts ) > 1 ) ? array_pop( $parts ) : '';
+					$src = implode( '.', $parts );
+				}
+
+				// Unfortunately, WordPress treats all atts as strings & PHP considers the string “false” to be truthy,
+				// so we must convert it to a true false boolean.
+				$atts = FixShowVersionAtt( $atts );
+
 				$atts = TransformShortcodeAttributesToElementAttributes( $atts );
 				// Make sure we don't propagate these to the HTML Attributes list.
 				unset( $atts[ 'src' ], $atts[ 'ext' ], $atts[ 'sizes' ] );
-				return ( string )( new $class( $src, $ext, $sizes, $atts ) );
+
+				try
+				{
+					if ( $class === HTMLPicture::class )
+					{
+						return ( string )( HTMLPicture::generate( $src, $ext, $sizes, $atts ) );
+					}
+					return ( string )( new $class( $src, $ext, $sizes, $atts ) );
+				}
+				catch ( WPMissingMediaException $e )
+				{
+					return ''; // No fallback info to give, so just return nothing.
+				}
+				catch ( MissingFileException $e ) // Since shortcodes should be mo’ user-friendly, we don’t want any website-breaking exceptions getting through.
+				{
+					return ( string )( $e->getFallbackContent() );
+				}
 			}
 			return '';
 		};

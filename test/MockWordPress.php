@@ -15,8 +15,20 @@
 	[
 		[],
 		[ 'src' => 'demo', 'ext' => 'png' ],
-		[ 'src' => 'photo', 'ext' => 'jpg' ]
+		[ 'src' => 'photo', 'ext' => 'jpg' ],
+		[ 'src' => 'mountain', 'ext' => 'jpg' ],
+		[ 'src' => 'forest', 'ext' => 'jpg' ]
 	];
+
+	function get_the_ID()
+	{
+		return 1;
+	}
+
+	function get_post_thumbnail_id( $id )
+	{
+		return $id;
+	}
 
 	function get_intermediate_image_sizes()
 	{
@@ -67,7 +79,7 @@
 					WP_OPTIONS[ "{$size}_size_h" ]
 				];
 		}
-		return null;
+		return false;
 	}
 
 	global $settings_fields;
