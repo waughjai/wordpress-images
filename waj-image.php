@@ -114,7 +114,17 @@ use WaughJ\WPPostThumbnail\WPPostThumbnail;
 		'upload-image',
 		function ( $atts )
 		{
+			if ( !is_array( $atts ) ) { return ''; }
+
+			// Make Media ID fallback to ID if not there,
+			// & if we fallback to ID, cancel ID HTML attribute.
 			$id = TestHashItemString( $atts, 'media-id' );
+			if ( $id === null )
+			{
+				$id = TestHashItemString( $atts, 'id' );
+				unset( $atts[ 'id' ] );
+			}
+
 			$size = TestHashItemString( $atts, 'size' );
 			if ( $id )
 			{
@@ -169,7 +179,17 @@ use WaughJ\WPPostThumbnail\WPPostThumbnail;
 		'upload-picture',
 		function ( $atts )
 		{
+			if ( !is_array( $atts ) ) { return ''; }
+
+			// Make Media ID fallback to ID if not there,
+			// & if we fallback to ID, cancel ID HTML attribute.
 			$id = TestHashItemString( $atts, 'media-id' );
+			if ( $id === null )
+			{
+				$id = TestHashItemString( $atts, 'id' );
+				unset( $atts[ 'id' ] );
+			}
+
 			if ( $id )
 			{
 				$atts = TransformShortcodeAttributesToElementAttributes( $atts );
@@ -214,6 +234,8 @@ use WaughJ\WPPostThumbnail\WPPostThumbnail;
 	{
 		return function ( $atts ) use ( $class )
 		{
+			if ( !is_array( $atts ) ) { return ''; }
+
 			$src = TestHashItemString( $atts, 'src' );
 			$ext = TestHashItemString( $atts, 'ext' );
 			$sizes = TestHashItemString( $atts, 'sizes' );

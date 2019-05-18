@@ -26,6 +26,12 @@ class WAJImageTest extends TestCase
 		$this->assertEquals( '<picture id="viewer"><source class="image-source" srcset="demo-150x150.png" media="(max-width:150px)"><source class="image-source" srcset="demo-300x300.png" media="(min-width:151px)"><img src="demo-150x150.png" width="800" alt="" /></picture>', $shortcode );
 	}
 
+	public function testNilThemeImage()
+	{
+		$shortcode = do_shortcode( '[theme-image]' );
+		$this->assertEquals( '', $shortcode );
+	}
+
 	public function testThemeImage()
 	{
 		$shortcode = do_shortcode( '[theme-image src="hello.png" id="special" class="image"]' );
@@ -65,12 +71,26 @@ class WAJImageTest extends TestCase
 		$this->assertStringContainsString( ' srcset="https://www.example.com/wp-content/themes/example/demo-300x300.png?m=', $shortcode );
 	}
 
+	public function testNilUploadImage()
+	{
+		$shortcode = do_shortcode( '[upload-image]' );
+		$this->assertEquals( '', $shortcode );
+	}
+
 	public function testUploadImage()
 	{
 		$shortcode = do_shortcode( '[upload-image media-id="1" id="first-image"]' );
 		$this->assertStringContainsString( ' src="https://www.example.com/wp-content/uploads/2018/12/demo.png?m=', $shortcode );
 		$this->assertStringContainsString( ' alt=""', $shortcode );
 		$this->assertStringContainsString( ' id="first-image"', $shortcode );
+	}
+
+	public function testUploadImageJustID()
+	{
+		$shortcode = do_shortcode( '[upload-image id="1"]' );
+		$this->assertStringContainsString( ' src="https://www.example.com/wp-content/uploads/2018/12/demo.png?m=', $shortcode );
+		$this->assertStringContainsString( ' alt=""', $shortcode );
+		$this->assertStringNotContainsString( ' id="', $shortcode );
 	}
 
 	public function testUploadImageAltOverride()
@@ -165,6 +185,12 @@ class WAJImageTest extends TestCase
 		$this->assertStringContainsString( ' media="(min-width:151px)"', $shortcode );
 	}
 
+	public function testThemePictureNil()
+	{
+		$shortcode = do_shortcode( '[theme-picture]' );
+		$this->assertEquals( '', $shortcode );
+	}
+
 	public function testThemePictureVersionless()
 	{
 		$shortcode = do_shortcode( '[theme-picture src="demo.png" sizes="150w 150h, 300w 300h" show-version="false"]' );
@@ -215,6 +241,25 @@ class WAJImageTest extends TestCase
 		$this->assertStringContainsString( ' alt=""', $shortcode );
 		$this->assertStringContainsString( ' media="(max-width:150px)"', $shortcode );
 		$this->assertStringNotContainsString( ' sizes="', $shortcode );
+	}
+
+	public function testUploadPictureNil()
+	{
+		$shortcode = do_shortcode( '[upload-picture]' );
+		$this->assertEquals( '', $shortcode );
+	}
+
+	public function testUploadPictureFallback()
+	{
+		$shortcode = do_shortcode( '[upload-picture id="1"]' );
+		$this->assertStringContainsString( '<picture>', $shortcode );
+		$this->assertStringContainsString( '<source', $shortcode );
+		$this->assertStringContainsString( ' srcset="https://www.example.com/wp-content/uploads/2018/12/demo-150x150.png?m=', $shortcode );
+		$this->assertStringContainsString( '<img src="https://www.example.com/wp-content/uploads/2018/12/demo-150x150.png?m=', $shortcode );
+		$this->assertStringContainsString( ' alt=""', $shortcode );
+		$this->assertStringContainsString( ' media="(max-width:150px)"', $shortcode );
+		$this->assertStringNotContainsString( ' sizes="', $shortcode );
+		$this->assertStringNotContainsString( ' id="', $shortcode );
 	}
 
 	public function testUploadPictureVersionless()
