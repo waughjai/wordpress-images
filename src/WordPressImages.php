@@ -1,20 +1,7 @@
 <?php
-	/*
-	Plugin Name:  WAJ Image
-	Plugin URI:   https://github.com/waughjai/waj-image-loaders
-	Description:  Classes & shortcodes for making image HTML generation simpler for WordPress.
-	Version:      3.0.0
-	Author:       Jaimeson Waugh
-	Author URI:   https://www.jaimeson-waugh.com
-	License:      GPL2
-	License URI:  https://www.gnu.org/licenses/gpl-2.0.html
-	Text Domain:  waj-image-loaders
-	*/
 
 declare( strict_types = 1 );
-namespace WAJ\WAJImage;
-
-require_once( 'vendor/autoload.php' );
+namespace WaughJ\WordPressImages;
 
 use WaughJ\FileLoader\MissingFileException;
 use WaughJ\HTMLImage\HTMLImage;
