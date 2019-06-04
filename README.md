@@ -88,8 +88,11 @@ For mo’ information on how each class works, check out their documentation @ h
 
 ## Changelog
 
-### 3.0.1
+### 3.0.2
 * Update TestHashItem dependency
+
+### 3.0.1
+* Fix dependency problem
 
 ### 3.0.0
 * Revamp all shortcodes & underlying classes.
