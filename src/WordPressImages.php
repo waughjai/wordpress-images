@@ -6,8 +6,7 @@ namespace WaughJ\WordPressImages;
 use WaughJ\FileLoader\MissingFileException;
 use WaughJ\HTMLImage\HTMLImage;
 use WaughJ\HTMLPicture\HTMLPicture;
-use function WaughJ\TestHashItem\TestHashItemExists;
-use function WaughJ\TestHashItem\TestHashItemString;
+use WaughJ\TestHashItem\TestHashItem;
 use WaughJ\WPThemeImage\WPThemeImage;
 use WaughJ\WPThemeOption\WPThemeOptionsPageManager;
 use WaughJ\WPThemeOption\WPThemeOptionsSection;
@@ -105,14 +104,14 @@ use WaughJ\WPPostThumbnail\WPPostThumbnail;
 
 			// Make Media ID fallback to ID if not there,
 			// & if we fallback to ID, cancel ID HTML attribute.
-			$id = TestHashItemString( $atts, 'media-id' );
+			$id = TestHashItem::getString( $atts, 'media-id' );
 			if ( $id === null )
 			{
-				$id = TestHashItemString( $atts, 'id' );
+				$id = TestHashItem::getString( $atts, 'id' );
 				unset( $atts[ 'id' ] );
 			}
 
-			$size = TestHashItemString( $atts, 'size' );
+			$size = TestHashItem::getString( $atts, 'size' );
 			if ( $id )
 			{
 				// Make sure we don't propagate this to the HTML Attributes list.
@@ -144,7 +143,7 @@ use WaughJ\WPPostThumbnail\WPPostThumbnail;
 		'image',
 		function ( $atts )
 		{
-			$src = TestHashItemString( $atts, 'src' );
+			$src = TestHashItem::getString( $atts, 'src' );
 			if ( $src )
 			{
 				// Make sure we don't propagate this to the HTML Attributes list.
@@ -170,10 +169,10 @@ use WaughJ\WPPostThumbnail\WPPostThumbnail;
 
 			// Make Media ID fallback to ID if not there,
 			// & if we fallback to ID, cancel ID HTML attribute.
-			$id = TestHashItemString( $atts, 'media-id' );
+			$id = TestHashItem::getString( $atts, 'media-id' );
 			if ( $id === null )
 			{
-				$id = TestHashItemString( $atts, 'id' );
+				$id = TestHashItem::getString( $atts, 'id' );
 				unset( $atts[ 'id' ] );
 			}
 
@@ -223,9 +222,9 @@ use WaughJ\WPPostThumbnail\WPPostThumbnail;
 		{
 			if ( !is_array( $atts ) ) { return ''; }
 
-			$src = TestHashItemString( $atts, 'src' );
-			$ext = TestHashItemString( $atts, 'ext' );
-			$sizes = TestHashItemString( $atts, 'sizes' );
+			$src = TestHashItem::getString( $atts, 'src' );
+			$ext = TestHashItem::getString( $atts, 'ext' );
+			$sizes = TestHashItem::getString( $atts, 'sizes' );
 			if ( $src && $sizes )
 			{
 				// If extension not specifically given, hint it through the src.

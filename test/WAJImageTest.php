@@ -1,7 +1,7 @@
 <?php
 
 require_once( 'MockWordPress.php' );
-require_once( 'waj-image.php' );
+require_once( 'src/WordPressImages.php' );
 use PHPUnit\Framework\TestCase;
 
 class WAJImageTest extends TestCase

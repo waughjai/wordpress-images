@@ -88,6 +88,9 @@ For mo’ information on how each class works, check out their documentation @ h
 
 ## Changelog
 
+### 3.0.1
+* Update TestHashItem dependency
+
 ### 3.0.0
 * Revamp all shortcodes & underlying classes.
 * WPUploadImage & WPUploadPicture shortcode attributes now use “media-id” for image ID & WPPostThumbnail now uses “post-id” ’stead o’ either using just “id” so they don’t conflict with setting id HTML attribute.
