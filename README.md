@@ -51,11 +51,6 @@ To add HTML attributes to WPThemePicture & WPUploadPicture shortcodes, prefix th
 
 ## Installation
 
-1. Upload the plugin files to the `/wp-content/plugins/plugin-name` directory, or install the plugin through the WordPress plugins screen directly.
-2. Activate the plugin through the 'Plugins' screen in WordPress
-3. Images can be added using shortcode in WordPress editors or directly in PHP by using instances o' classes. Instances o' classes can be automatically casted into strings & used as strings.
-
-
 ## Examples
 
 	use WaughJ\WPUploadImage\WPUploadImage;
@@ -87,6 +82,9 @@ Will generate something like `<picture><source srcset="https://www.example.com/w
 For mo’ information on how each class works, check out their documentation @ https://github.com/waughjai?tab=repositories
 
 ## Changelog
+
+### 3.1.0
+* Hide admin input box for setting image default directory behind function so it is opt-in instead of there by default.
 
 ### 3.0.2
 * Update TestHashItem dependency
