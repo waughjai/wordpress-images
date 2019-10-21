@@ -83,8 +83,11 @@ For mo’ information on how each class works, check out their documentation @ h
 
 ## Changelog
 
+### 3.1.1
+* Fix bug with transformShortcodeAttributesToElementAttributes method to ensure it works in future versions of PHP
+
 ### 3.1.0
-* Hide admin input box for setting image default directory behind function so it is opt-in instead of there by default.
+* Hide admin input box for setting image default directory behind function so it is opt-in instead of there by default
 
 ### 3.0.2
 * Update TestHashItem dependency
@@ -94,36 +97,36 @@ For mo’ information on how each class works, check out their documentation @ h
 
 ### 3.0.0
 * Revamp all shortcodes & underlying classes.
-* WPUploadImage & WPUploadPicture shortcode attributes now use “media-id” for image ID & WPPostThumbnail now uses “post-id” ’stead o’ either using just “id” so they don’t conflict with setting id HTML attribute.
-* All classes have improved error-handling so that they all throw exceptions. Shortcodes catch all exceptions so unsightly errors don’t show up on public website.
+* WPUploadImage & WPUploadPicture shortcode attributes now use “media-id” for image ID & WPPostThumbnail now uses “post-id” ’stead o’ either using just “id” so they don’t conflict with setting id HTML attribute
+* All classes have improved error-handling so that they all throw exceptions. Shortcodes catch all exceptions so unsightly errors don’t show up on public website
 
 ### 2.2.1
-* Turn on thumbnail support by default.
+* Turn on thumbnail support by default
 
 ### 2.2.0
-* Add WPPostThumbnail class & shortcode for easily getting post thumbnail.
+* Add WPPostThumbnail class & shortcode for easily getting post thumbnail
 
 ### 2.1.1
-* Fix WPThemePicture bug changing default theme shared directory.
+* Fix WPThemePicture bug changing default theme shared directory
 
 ### 2.1.0
-* Update dependencies, test for WordPress 5.1.
+* Update dependencies, test for WordPress 5.1
 
 ### 2.0.1
-* Fix buggy WPUploadImage class.
+* Fix buggy WPUploadImage class
 
 ### 2.0
-* Refactor into split classes.
-* Fix WordPress Uploads incompatibility with WPUpload classes.
+* Refactor into split classes
+* Fix WordPress Uploads incompatibility with WPUpload classes
 
 ### 1.3
-* Add directory bar to admin.
+* Add directory bar to admin
 
 ### 1.2
-* Add ability to just get source from images.
+* Add ability to just get source from images
 
 ### 1.1
-* Make uploads classes mo' automatic.
+* Make uploads classes mo' automatic
 
 ### 1.0
-* Initial stable version.
+* Initial stable version

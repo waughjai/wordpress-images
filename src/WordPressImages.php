@@ -265,7 +265,7 @@ class WordPressImages
 		$prefixes = [];
 		$prefix_lengths = [];
 
-		foreach ( PICTURE_ELEMENTS as $element )
+		foreach ( self::PICTURE_ELEMENTS as $element )
 		{
 			// Where we will put the new versions o' the attributes for each element.
 			$element_atts[ $element ] = [];
@@ -278,7 +278,7 @@ class WordPressImages
 		// Convert attributes
 		foreach ( $atts as $attribute_key => $attribute_value )
 		{
-			foreach ( PICTURE_ELEMENTS as $element )
+			foreach ( self::PICTURE_ELEMENTS as $element )
 			{
 				$prefix = $prefixes[ $element ];
 				$prefix_length = $prefix_lengths[ $element ];
@@ -293,7 +293,7 @@ class WordPressImages
 		}
 
 		// Finally, add all new versions o' attributes to original attributes.
-		foreach ( PICTURE_ELEMENTS as $element )
+		foreach ( self::PICTURE_ELEMENTS as $element )
 		{
 			$atts[ "{$element}-attributes" ] = $element_atts[ $element ];
 		}
